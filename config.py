@@ -1,6 +1,7 @@
 """
 Configuration for the Fingrid Open Data application.
-Loads API key from environment variable FINGRID_API_KEY.
+The API key and other information are obtained from developer-data.fingrid.fi.
+Loads API key from environment: FINGRID_API_KEY, API_KEY, or FINGRID_OPENDATA_API_KEY.
 """
 import os
 
@@ -13,6 +14,10 @@ REQUEST_DELAY_SECONDS = 6.5
 
 
 def get_api_key():
-    # Returns str or None
-    """Return the API key from environment, or None if not set."""
-    return os.environ.get(API_KEY_ENV_VAR) or os.environ.get("FINGRID_OPENDATA_API_KEY")
+    """Return the API key from environment, or None if not set.
+    Checks FINGRID_API_KEY, FINGRID_OPENDATA_API_KEY, and API_KEY (course example)."""
+    return (
+        os.environ.get(API_KEY_ENV_VAR)
+        or os.environ.get("FINGRID_OPENDATA_API_KEY")
+        or os.environ.get("API_KEY")
+    )

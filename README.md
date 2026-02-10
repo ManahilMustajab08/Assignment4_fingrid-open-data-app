@@ -1,6 +1,12 @@
-# Fingrid Open Data – Python Application
+# Fingrid data (Python Application)
 
-A modular Python application that retrieves **electricity-related open data** from the **Fingrid Open Data API** (Finland’s transmission system operator) and presents the results as a **readable table** in the terminal and/or as a **matplotlib chart**.
+**Project name:** Fingrid data  
+
+Open data from the **Fingrid Open Data API** is fetched and presented as a **readable table** in the terminal and/or as a **matplotlib chart**. (Course reference project stores data in a database and visualizes with Grafana; this assignment uses table + chart instead.)
+
+**The API key and other information are obtained from [developer-data.fingrid.fi](https://developer-data.fingrid.fi).**
+
+**Course context (Carbon awareness – Coding example):** COMP.SE.221 Sustainable Software Engineering. Fingrid is Finland’s transmission system operator. This project uses the [Fingrid Open Data API](https://data.fingrid.fi). For the course example (API → database → Grafana), see [github.com/miksa007/Sustainable2025_ex](https://github.com/miksa007/Sustainable2025_ex). This repo includes **`get_datasets.py`** (list all dataset metadata → `datasets_info.txt`) and **`wind.py`** (dataset metadata + optional wind time-series plot).
 
 ## What the application does
 
@@ -13,16 +19,18 @@ A modular Python application that retrieves **electricity-related open data** fr
 
 ## API key – how to obtain and configure
 
+**The API key and other information are obtained from [developer-data.fingrid.fi](https://developer-data.fingrid.fi).**
+
 1. **Register** at [Fingrid Open Data](https://data.fingrid.fi) (free, valid email required).
-2. Open the **Developer portal** from the control panel and **subscribe** to **“Open Data starter”**.
-3. In your **profile**, create/copy your **API key**.
+2. Open the **Developer portal** ([developer-data.fingrid.fi](https://developer-data.fingrid.fi)) from the control panel and **subscribe** to **“Open Data starter”**.
+3. In your **profile** on the developer portal, create/copy your **API key**.
 4. **Configure** the key in your environment:
 
    ```bash
    export FINGRID_API_KEY="your-api-key-here"
    ```
 
-   Alternatively, the app also checks `FINGRID_OPENDATA_API_KEY`.
+   The app also accepts `API_KEY` (as in the course examples) or `FINGRID_OPENDATA_API_KEY`.
 
    **Security:** Do not commit the API key to version control. Use environment variables or a local `.env` (and add `.env` to `.gitignore` if you use one).
 
@@ -144,10 +152,10 @@ python main.py
 **Expected:**
 
 ```
-Error: No API key found. Set the FINGRID_API_KEY (or FINGRID_OPENDATA_API_KEY) environment variable. ...
+Error: No API key found. The API key and other information are obtained from https://developer-data.fingrid.fi ...
 
-How to get an API key:
-  1. Go to https://data.fingrid.fi and sign in/register.
+The API key and other information are obtained from developer-data.fingrid.fi
+  1. Go to https://developer-data.fingrid.fi (or data.fingrid.fi → Developer portal).
   ...
 ```
 
@@ -164,8 +172,10 @@ python main.py --variable unknown_var
 ```
 fingrid_open_data_app/
 ├── main.py              # CLI entry point
+├── get_datasets.py      # Optional: fetch all dataset metadata from API → datasets_info.txt
+├── wind.py              # Course-style: fetch dataset metadata (+ optional wind time-series plot)
 ├── config.py             # API base URL, API key from env
-├── datasets.py           # Catalog of variable names ↔ dataset IDs
+├── datasets.py           # Curated catalog (subset); full list from API in datasets_info.txt
 ├── api_client.py         # HTTP client, pagination, error handling
 ├── services/
 │   ├── __init__.py
@@ -176,6 +186,29 @@ fingrid_open_data_app/
 │   └── chart_formatter.py  # Matplotlib chart
 ├── requirements.txt
 └── README.md
+```
+
+## Fetching dataset metadata (optional)
+
+The script **`get_datasets.py`** does what the course example does: it calls the Fingrid **dataset metadata** endpoint (`/api/datasets/{id}`) for IDs 1–250 and saves `id` and English name to **`datasets_info.txt`**. Useful to discover or update available datasets. Same idea as in [Sustainable2025_ex/get_datasets.py](https://github.com/miksa007/Sustainable2025_ex).
+
+```bash
+export FINGRID_API_KEY='your_key'
+python get_datasets.py
+```
+
+Accepts `FINGRID_API_KEY`, `API_KEY`, or `FINGRID_OPENDATA_API_KEY`. Uses a 2-second delay between requests to respect the API rate limit.
+
+The **full list** of datasets (id + name) from the API looks like the JSON you see in the course: an array of `{"id": 1, "name": "Automatic Frequency Restoration Reserve, capacity, up"}, ...`. After running `get_datasets.py`, that list is in **`datasets_info.txt`**. The app’s **`datasets.py`** uses a **curated subset** of those IDs for the main CLI; you can extend it from `datasets_info.txt` if you like.
+
+### Wind example (course-style: `wind.py`)
+
+**`wind.py`** mirrors the course [wind.py](https://github.com/miksa007/Sustainable2025_ex): it fetches **metadata** for one dataset from `GET /api/datasets/75` (Wind power, 15-min) and prints the JSON. Optionally, with `--data`, it also fetches **time-series** for the last 24 hours and saves a plot to `wind_plot.png`.
+
+```bash
+export FINGRID_API_KEY='your_key'
+python wind.py              # metadata only (like course wind.py)
+python wind.py --data       # metadata + fetch series and plot
 ```
 
 ## Error handling
@@ -193,9 +226,10 @@ fingrid_open_data_app/
 
 ## Documentation (learning diary / PDF)
 
-For the assignment, you can export this README (or a shortened “User guide” section) to PDF and submit it as the documentation part of your learning diary. Include:
+For the assignment, you can export this README (or a shortened “User guide” section) to PDF and submit it as the documentation part of your learning diary. Include (as per course instructions):
 
-- What the application does  
-- How to obtain and configure the API key  
+- **Project name:** Fingrid data  
+- What the application does (open data from Fingrid API fetched and displayed as table/chart)  
+- **The API key and other information are obtained from developer-data.fingrid.fi** — how to obtain and configure the API key  
 - How to install and run  
 - At least one example run and expected output (e.g. table + error example)

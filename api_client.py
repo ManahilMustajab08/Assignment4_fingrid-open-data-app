@@ -75,8 +75,8 @@ def fetch_timeseries(
     api_key = get_api_key()
     if not api_key:
         raise MissingAPIKeyError(
-            "No API key found. Set the FINGRID_API_KEY (or FINGRID_OPENDATA_API_KEY) "
-            "environment variable. Get a free key at https://data.fingrid.fi → Developer portal."
+            "No API key found. The API key and other information are obtained from "
+            "https://developer-data.fingrid.fi. Set FINGRID_API_KEY (or API_KEY) in your environment."
         )
 
     headers = {"x-api-key": api_key}

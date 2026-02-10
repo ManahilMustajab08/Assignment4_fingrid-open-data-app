@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Fingrid Open Data – CLI entry point.
-Retrieves electricity-related data from Fingrid Open Data API and displays
-results as a table and/or chart based on user-defined time range and variable.
+Fingrid data – CLI entry point.
+Open data from the Fingrid Open Data API is fetched and displayed as a table
+and/or chart. The API key and other information are obtained from developer-data.fingrid.fi.
 """
 import argparse
 import sys
@@ -143,9 +143,9 @@ def main() -> int:
     except FingridAPIError as e:
         print(f"Error: {e}", file=sys.stderr)
         if isinstance(e, MissingAPIKeyError):
-            print("\nHow to get an API key:", file=sys.stderr)
-            print("  1. Go to https://data.fingrid.fi and sign in/register.", file=sys.stderr)
-            print("  2. Open Developer portal → Subscribe to 'Open Data starter'.", file=sys.stderr)
+            print("\nThe API key and other information are obtained from developer-data.fingrid.fi", file=sys.stderr)
+            print("  1. Go to https://developer-data.fingrid.fi (or data.fingrid.fi → Developer portal).", file=sys.stderr)
+            print("  2. Sign in/register and subscribe to 'Open Data starter'.", file=sys.stderr)
             print("  3. Copy your API key and set: export FINGRID_API_KEY=your_key", file=sys.stderr)
         return 1
     except ValueError as e:
