@@ -1,0 +1,5 @@
+# Fingrid Open Data application
+# Core: no extra deps for table-only output (uses stdlib urllib, json).
+
+# Optional: for --chart / visualization
+matplotlib>=3.5.0
